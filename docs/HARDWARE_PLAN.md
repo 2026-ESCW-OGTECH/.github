@@ -1,186 +1,154 @@
 # 하드웨어 계획
 
-> Notion `HW`, `HW-전력`, `HW-spec`, `HW-구현`, `빠때리`, `마익췍`, `HW - 통신` 기준 동기화: 2026-07-09
+> **부품 선정·원가·중량·발주 우선순위의 정본은 `smartaid-llm/docs2/10_부품_선정_BOM.md`입니다.**
+> 이 문서는 조직 저장소용 요약본입니다. 수치가 충돌하면 docs2/10이 우선합니다.
 
-SafeAid Kit는 소프트웨어 안내 앱이 아니라, 실제 구급함 내부 상태를 읽고 필요한 구역을 표시하며 기구부를 제어하는 임베디드 시스템으로 시연합니다.
+SafeAid Kit는 소프트웨어 안내 앱이 아니라, 배낭에 장착되어 위치·시간·환경을 스스로 계측하고
+사용자가 의식이 없을 때도 감시를 계속하는 임베디드 시스템으로 시연합니다.
 
 ## 최신 기준 요약
 
-- 메인 컴퓨팅은 `Jetson Xavier NX`를 사용합니다.
-- MCU는 `STM32F401RET6`(`STM32F401RE` 계열)를 기준으로 합니다.
-- 터치 화면은 `Waveshare 7inch HDMI LCD (C)`를 Jetson에 HDMI/USB로 연결합니다.
-- 통신 모듈은 `SIM7670G development board`를 STM32 UART와 AT command로 제어합니다.
-- 서보는 `DM-S1300MD digital metal-gear servo` 4개를 기준으로 합니다.
-- LED는 `2835 SMD LED strip/pieces` 총 10개 배치를 우선 기준으로 합니다.
-- 전원은 4S LiFePO4 배터리 기반 `BAT_IN`에서 `5V_COMPUTE`, `5V_LED`, `6V_SERVO`, `3V3_LOGIC`, `BAT_SIM`으로 분리합니다.
-- 기구부는 3D 프린팅 판재, 카본 시트지 래핑, DF2020 프레임, 300mm 3단 댐핑 볼 레일을 사용합니다.
+- 메인 컴퓨팅은 `Jetson Xavier NX 8GB`를 사용하며 부팅 매체는 NVMe로 고정합니다.
+- MCU는 `STM32F401RET6`이며 역할은 **상시 전원 관리자 + 센서 허브 + GNSS 로거**입니다.
+- 터치 화면은 `Waveshare 7inch HDMI LCD (C)`를 **HDMI + USB(터치)** 로 Jetson에 연결합니다.
+  배낭 구조상 **능동형 연장 케이블**이 필요하며 실측 검증 대상입니다.
+- 측위는 `Seeed Grove GPS (Air530)`를 STM32 UART로 제어합니다 (**VCC 3.3 V**).
+- 전원은 **4S Li-ion 21700 330 Wh**에서 `3V3_LOGIC`(상시)과 `JETSON_RAIL`(게이팅) 2계층으로 분리합니다.
+- 기구부는 IP67 하드케이스 + 방수 통기막 + MOLLE 웨빙 마운트를 사용합니다.
 
-## 전체 구조
+---
 
-| 구분 | 역할 | 설계 기준 |
-| --- | --- | --- |
-| Jetson Xavier NX | 터치 UI, AI/검색 로직, USB 마이크/스피커, 화면 출력 | 5V 입력 안정성 최우선, LED/서보/SIM 부하와 전원 분리 |
-| STM32F401RET6 | LED 스위칭, 서보 PWM, 인터럽트 입력, 배터리 전압 감지, SIM AT command 처리 | 3.3V logic rail, GPIO는 제어 신호만 출력 |
-| SIM7670G 개발보드 | LTE 통신 | STM32 UART 연결, `VIN 5V~16V` 또는 안정 5V 입력 사용 |
-| 7inch HDMI LCD | 사용자 UI와 터치 입력 | Jetson HDMI + USB touch, 5V 전원 |
-| USB mic/speaker | 음성 입력/출력 | Jetson USB host 연결, 5V_COMPUTE 예산에 포함 |
-
-Jetson은 SIM 모듈에 직접 AT command를 보내지 않고, STM32에 "통신 상태 조회", "송신 요청", "초기화 요청" 같은 상위 명령을 보냅니다. STM32는 SIM7670G의 AT command sequence, timeout, retry, URC 처리를 담당하고 결과만 Jetson에 전달합니다.
-
-## 기구 구조
-
-| 층 | 구성 | 대표 물품 | 표시/동작 |
-| --- | --- | --- | --- |
-| 1층 | 큰 서랍 1개, 내부 3파티션 | 붕대, 부목, 파스 등 큰 물품 | 서랍 단위 개방, 파티션별 LED |
-| 2층 | 큰 서랍 1개, 내부 6파티션 | 연고, 반창고 등 중형 물품 | 서랍 단위 개방, 파티션별 LED |
-| 3층 | 상부 뚜껑 접근 공간, 4~6파티션 후보 | 식염수, 지혈대 등 빠른 접근 물품 | 뚜껑 접근, 파티션별 LED 후보 |
-
-- 1층과 2층은 수평 서랍 구조입니다.
-- 3층은 수평 서랍이 아니라 상부 뚜껑을 열어 접근하는 구조입니다.
-- Notion 구현안에는 서보 래치, 압축 스프링, 유연 노치로 자동 인출/재잠금을 구현하는 구조가 정리되어 있습니다.
-- Notion 본문에는 랙 앤 피니언과 3단 댐핑 볼 레일을 이용한 자동 개폐 방향도 포함되어 있으므로, 실제 제작 전에는 두 방식 중 제작 난이도와 서보 부하를 비교해야 합니다.
-- 현재 LED 배치 기준은 1층 3개, 2층 6개, 3층 1개로 총 10개입니다. 3층을 4~6파티션으로 확정하면 LED/센서 수와 펌웨어 `CELL_IDS`를 다시 늘려야 합니다.
-
-## 외장/프레임
-
-| 항목 | 기준 |
-| --- | --- |
-| 바디 | 3D 프린팅 판재, 내부 채움 조절로 경량화, 배선로와 인서트 홀 사전 설계 |
-| 스킨 | 외부 카본 시트지 래핑, 3D 프린팅 결 커버 및 시제품 마감 |
-| 프레임 | DF2020, 탭가공 필수, 최소 60mm 기준 |
-| 모서리 결합 | 코너블락 사용 |
-| 기동부 | 300mm 3단 댐핑 볼 레일 4개 |
-| 제어부 | 후면 고정 벽면에 MCU/전원부 배치 |
-| 배선 | 슬림형 FFC 케이블과 3D 프린팅 내장 가이드 채널로 유격과 걸림 최소화 |
-| 잠금 | 스프링 내장 매미 2개를 사용해 suitcase식 잠금 구조 구성 |
-
-## 확정/예정 BOM
-
-| 구분 | 부품 | 수량 | 메모 |
-| --- | --- | --- | --- |
-| 메인 컴퓨팅 | Jetson Xavier NX | 1 | 10W~15W 모드, 5V 입력 안정성 필요 |
-| 하위 제어기 | STM32F401RET6 | 1 | 3.3V logic, PWM/UART/ADC/interrupt 담당 |
-| 디스플레이 | Waveshare 7inch HDMI LCD (C) | 1 | HDMI 화면, USB touch, 5V 전원 |
-| 통신 | SIM7670G development board | 1 | STM32 UART, AT command, VIN 전원 |
-| 서보 | DM-S1300MD digital metal-gear servo | 4 | 6V nominal, stall 2.5A/개 |
-| LED | 2835 SMD LED strip/pieces | 10개 예정 | 5V, 6W/m, 총 길이 기준으로 전류 계산 |
-| 마이크 | Adafruit Mini USB Microphone Product ID 3367 | 1 | Jetson USB |
-| 스피커 | Adafruit Mini External USB Stereo Speaker Product ID 3369 | 1 | Jetson USB, 2 x 2W |
-| 레일 | 300mm 3단 댐핑 볼 레일 | 4 | 서랍 기동부 |
-| 프레임 | DF2020 + 코너블락 | 필요 수량 | 탭가공 필수 |
-| 배터리 | 4S LiFePO4 배터리팩 후보 | 1 | `BAT_IN` 10V~14.6V 기준 |
-| 보호/전원 | BMS, fuse/eFuse, load switch, TVS, DC/DC converter | 필요 수량 | 각 rail 분리와 단락/과전류 보호 |
-| 개발/디버그 | ST-LINK | 1 | STM32 flashing/debug |
-
-## 전원 구조
-
-권장 구조:
+## 1. 구조 — 이중 전원 계층
 
 ```text
-4S LiFePO4 Battery / main input
-  -> BMS / fuse / power switch / reverse polarity protection
-  -> BAT_IN: 10V~14.6V main path
-  -> 5V_COMPUTE: Jetson, LCD, USB mic/speaker
-  -> 5V_LED: LED strip/pieces
-  -> 6V_SERVO: DM-S1300MD servo x4
-  -> 3V3_LOGIC: STM32, level shifter, low-current logic
-  -> BAT_SIM: SIM7670G VIN branch with fuse/load switch/filter
+ [20W 태양광]──▶[BQ24650 MPPT]──┐
+                                 ▼
+                    ┌────────────────────────────┐
+                    │  4S 21700 Li-ion  330 Wh   │
+                    │  12.0 ~ 16.8 V (공칭 14.4) │
+                    │  + 4S BMS + MAX17205       │
+                    └──────┬──────────────┬──────┘
+                           │              │
+              (직결, 승압 불필요)      [벅 → 3.3V]
+                           │              │
+                           ▼              ▼
+      ┌────────────────────────┐   ┌──────────────────────────┐
+      │ [고측 MOSFET 로드스위치]│   │  STM32F401RET6  상시 ON  │
+      │  ← STM32가 게이팅      │   │  0.25 ~ 0.4 W            │
+      │         ▼              │◀──┤   CO / 온습도 / 기압     │
+      │  Jetson Xavier NX      │   │   GNSS / RTC / 자기계    │
+      │  DC잭 9~20V 입력       │   │   IMU / 부저 / 진동      │
+      │  + 7인치 LCD           │   │   LED / 버튼 / 쿨롱카운터│
+      └────────────────────────┘   └──────────────────────────┘
 ```
 
-| Rail | 연결 대상 | 권장 정격 |
-| --- | --- | --- |
-| `BAT_IN` | BMS, fuse, main switch 뒤 PCB 입력 | 4S LiFePO4 기준 10V~14.6V, main path 20A급 여유 |
-| `5V_COMPUTE` | Jetson, LCD, USB mic/speaker | 최소 5V 6A, LCD/USB 여유 포함 5V 8A 권장 |
-| `5V_LED` | LED strip/pieces | 실제 LED 길이에 따라 산정, 3m 예시 3.6A |
-| `6V_SERVO` | DM-S1300MD x4 | peak 12A~15A |
-| `3V3_LOGIC` | STM32, level shifter, logic | 0.5A 기본, 확장 여유 1A |
-| `BAT_SIM` | SIM7670G VIN | BAT_IN 직접 분기 가능, fuse/load switch/filter 필수 |
+**설계 근거 3가지**
 
-LED 전력은 개수가 아니라 총 길이로 계산합니다.
+1. Jetson DC잭 입력 범위가 9~20 V이므로 **4S 팩이 그대로 들어갑니다.** 승압 컨버터 불필요.
+2. STM32는 3.3 V 벅에서 상시 급전되어 Jetson이 완전히 꺼져도 감시가 살아 있습니다.
+3. Jetson 전원을 MOSFET로 **물리 차단**합니다. 소프트웨어 슬립(7.3 W)이 아니라 진짜 0 W입니다.
+
+---
+
+## 2. 부품 요약
+
+| 계층 | 부품 | 비고 |
+|---|---|---|
+| 연산 | Jetson Xavier NX 8GB + NVMe | 유휴 7.3 W `[출처]` |
+| 상시 | STM32F401RET6 | 상시 전원 관리자 + 센서 허브 |
+| 표시 | Waveshare 7inch HDMI LCD (C) | **휘도 확인 필요.** 직사광선 판독에 800 nit 이상 권장 `[미검증]` |
+| 측위 | **Seeed Grove GPS (Air530)** | 6계 GNSS, u.FL 외장 안테나 동봉 |
+| 측위 | MMC5983MA + IMU | 기울기 보정 나침반. **정지 상태 방위에 필수** |
+| 시각 | DS3231 RTC | ±2 ppm. GPS OFF 상태에서 일출몰 계산 기준 |
+| 안전 | **ZE07-CO / ZE15-CO** | **전기화학식만.** MQ 시리즈는 히터 750 mW로 금지 |
+| 환경 | SHT40 + BMP390 | 온·습도 / 기압(고도 + Zambretti) |
+| 음성 | INMP441 + MAX98357A + 스피커 | 윈드스크린 필수 |
+| 알림 | IP67 부저 · 진동 · 스트로브 · **물리 버튼 3개** | 터치가 죽어도 P0 동작 |
+| 전원 | 4S5P 21700 (360 Wh) + BMS + MAX17205 | 100 Wh 미만 모듈 분리형 |
+| 충전 | 20~28 W 접이식 + BQ24650 MPPT | 개활지 전용. 숲에서 80% 이상 감소 |
+| 기구 | IP67 본체 + IP65 화면부 + 방수 통기막 | 기압 센서에 통기막 필수 |
+
+**중량 목표 3 kg** — 현재 추정 4.2~4.5 kg. 시연기는 4S3P(216 Wh) + 태양광 제외로 약 2.8 kg 권고.
+
+---
+
+## 3. 전력 예산 (14일)
+
+| 상태 | 소비 | 일일 시간 | 14일 Wh |
+|---|---:|---:|---:|
+| S1 감시 (STM32 + 센서) | 0.35 W | 14 h | 68.6 |
+| S2 항법 (S1 + GNSS 연속) | 0.55 W | 10 h | 77.0 |
+| S3 화면 ON (Jetson 유휴) | 13 W | 23 분 | 68.9 |
+| S4 LLM 응답 | 18 W | 100 초 | 7.0 |
+| Jetson 부팅 오버헤드 | 18 W × 15 s × 8회 | — | 8.4 |
+| **소계** | | | **229.9** |
+| 변환 손실 ×1.15 + 마진 +25% | | | **330 Wh** |
+
+**상시 구동은 4,368 Wh(배터리만 30~45 kg)로 물리적으로 불가능합니다.** 듀티 사이클링이 유일한 해법입니다.
+
+---
+
+## 4. Serial Protocol (Jetson ↔ STM32)
+
+Baud rate `115200`, 응답은 한 줄 JSON.
 
 ```text
-LED_power_W = 6W/m x total_LED_length_m
-LED_current_A = LED_power_W / 5V
+GET_FIX              현재 GNSS 좌표 · 정확도 · 위성 수
+GET_ENV              온도 · 습도 · 기압 · CO ppm
+GET_HEADING          기울기 보정 방위
+GET_POWER            배터리 %, 잔여 추정 일수, 충전 상태
+GET_TRACK <n>        최근 위치 로그 n개
+MARK_WAYPOINT <type> 체크포인트 저장 (tent / basecamp / water / bailout)
+SET_ALARM <cond>     임계 등록
+DISTRESS ON|OFF      조난 신호 모드 (6회/분)
+JETSON PWR ON|OFF    전원 게이팅
 ```
 
-예시:
+**GNSS 미수신 시 좌표를 추정으로 채우지 않습니다.**
+
+```json
+{"ok":true,"event":"fix","fix":false,"last_age_s":840}
+```
+
+---
+
+## 5. STM32 단독 완결 항목 — Jetson 없이
+
+부팅 15초 걸리는 경로에 사람 목숨을 걸지 않습니다.
 
 ```text
-30cm 조각 10개 = 3m
-LED_power = 6W/m x 3m = 18W
-LED_current = 18W / 5V = 3.6A
+CO 주의            -> 부저 약 + 진동
+CO 경보            -> 부저 최대 + 진동 + 적색 LED
+저온 경보          -> 부저
+배터리 임계 경보   -> 부저
+조난 신호 모드     -> 부저/스트로브 6회/분 반복
+GPS 자동 위치 로깅 -> 내장 플래시
 ```
 
-## 서보 보호 기준
-
-- 서보 V+는 STM32/Nucleo 보드에서 절대 공급하지 않습니다.
-- STM32는 PWM 신호만 출력합니다.
-- `6V_SERVO` 입력에는 fuse 또는 eFuse/load switch를 둡니다.
-- `6V_SERVO` rail에는 rail 전압에 맞는 단방향 TVS diode를 검토합니다.
-- servo rail 근처에는 `2200uF~4700uF` bulk capacitor와 `0.1uF` ceramic capacitor를 둡니다.
-- 각 servo connector 근처에는 `470uF~1000uF` capacitor와 `100nF` ceramic capacitor를 둡니다.
-- STM32 PWM line에는 `100~330ohm` series resistor와 `10k` pulldown을 둡니다.
-- servo power return과 STM32 signal GND는 star point에서 합류시킵니다.
-- 대기 전력 절감을 위해 servo rail은 high-side load switch 또는 eFuse로 필요할 때만 켜는 구조를 권장합니다.
-
-## 앱/펌웨어 연동
-
-현재 앱은 `smartaid-kit/hardware.py`의 `KitController`로 모의 모드와 STM32 모드를 같은 API로 다룹니다.
-
-환경변수:
-
-```powershell
-$env:SAFEAID_KIT_MODE="stm32"
-$env:SAFEAID_STM32_PORT="COM5"
-python app.py
-```
-
-현재 Serial 명령:
+**CO 임계값 (2단)** — 가정용 표준(UL 2034)보다 의도적으로 공격적으로 잡았습니다.
 
 ```text
-OPEN_LAYER 2
-SET_CELL_LED 2-3
-CLOSE_ALL
-READ_STOCK
-GET_BATTERY
+[주의]  35 ppm 이상 3분 지속  또는  10분 내 +20 ppm 급상승
+[경보]  100 ppm 이상 즉시
+        또는 UL 2034 곡선 도달 (70 ppm/60분, 150 ppm/10분, 400 ppm/4분)
 ```
 
-추가 예정 명령:
+---
 
-```text
-GET_COMMS_STATUS
-SIM_SEND <payload>
-SIM_RESET
-```
+## 6. 안전 설계 규칙
 
-SIM7670G 제어 명령은 STM32 펌웨어에서 AT command sequence가 안정화된 뒤 추가합니다.
+- **저온 충전 차단**: 리튬이온은 0°C 이하 충전 시 리튬 도금으로 영구 손상. BMS + 펌웨어 이중 차단.
+- **자기 간섭 회피**: 자기계를 배터리·스피커·진동 모터에서 최대한 멀리 배치. 하드아이언 보정 필수.
+- **열 관리**: 밀폐 IP67 케이스는 대류가 없음. 케이스 금속면 서멀 결합 + 파워 모드 10W 고정 + 온도 기반 자동 강등.
+- **CO 검증 시험**: 부탄 스토브 시험은 **반드시 실외에서, 사람은 밖에 두고, 밀폐 상자 안에 센서만** 넣어 수행.
+- **항공 운송**: 여객기 반입 한도 100 Wh. 4S1P 72 Wh 모듈 5개 분리형으로 구성.
 
-## Bring-up 순서
+---
 
-1. Jetson만 전원 연결 후 5V 입력 안정성을 확인합니다.
-2. HDMI LCD와 USB touch를 연결해 해상도와 touch 동작을 확인합니다.
-3. USB microphone/speaker의 audio input/output을 확인합니다.
-4. STM32를 3.3V logic rail에서 별도 bring-up합니다.
-5. Jetson-STM32 UART 통신을 확인합니다.
-6. STM32-SIM7670G UART 연결 후 기본 AT command 응답을 확인합니다.
-7. SIM7670G 초기화, network 상태 조회, timeout/retry/URC 처리를 확인합니다.
-8. 서보 1개를 6V rail에서 먼저 테스트합니다.
-9. 서보 4개 연결 후 동시 구동과 전압 강하를 확인합니다.
-10. LED를 current-limited supply에서 먼저 테스트합니다.
-11. SIM7670G를 전체 시스템 전원 구성에 포함해 5V/BAT_SIM rail의 순간 전류 대응을 확인합니다.
+## 7. 삭제된 하드웨어
 
-## 안전 경계
-
-- 일반의약품은 보관과 위치 안내 대상입니다.
-- 앱은 "있습니다/없습니다", "위치는 n층 n-n구역입니다", "열어 드릴까요?"까지만 말합니다.
-- 복용량, 약 추천, 처치 추천, 치료 결과 판단은 생성하지 않습니다.
-- 유통기한이 지난 물품은 사용 지시 없이 교체 필요만 표시합니다.
-- 재고 센서가 검증하는 것은 "물품 정체성"이 아니라 "해당 슬롯/구역의 상태"입니다. RFID, QR, 비전 검증을 추가하지 않는 한 UI 문구는 "올바른 물품"보다 "올바른 구역"으로 표현합니다.
-
-## 미확정 항목
-
-- 3층 파티션 수: Notion 본문에는 4~6개 후보가 있고, 현재 전력/LED 계산은 3층 LED 1개 기준입니다.
-- 서랍 구동 방식: 서보 래치 + 스프링 방식과 랙 앤 피니언 방식 중 실제 제작 난이도/서보 부하를 비교해야 합니다.
-- LED 실제 총 길이: `5V_LED` 정격은 최종 길이 확정 후 다시 계산해야 합니다.
-- 배터리와 DC/DC converter 실제 모델: 데이터시트 확인 후 `BAT_IN`, `5V_COMPUTE`, `5V_LED`, `6V_SERVO` 정격을 확정해야 합니다.
-- SIM7670G 최종 전원 경로: 개발보드의 `VIN` 입력과 `VBAT` 입력을 동시에 공급하지 않도록 실제 보드 회로를 확인해야 합니다.
+- DM-S1300MD 서보 4개, 6 V 서보 rail (peak 12~15 A)
+- 2835 SMD LED 10구역, 재고 감지 센서 10개, 2×2 수납칸 A/B/C/D
+- SIM7670G 모뎀 및 AT command 경로
+- ESP32 카메라 노드 (영상 판정은 안전 계약 위반)
+- 3단 댐핑 볼 레일, DF2020 프레임 등 서랍 기구부
