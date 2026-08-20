@@ -270,13 +270,13 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 ├─ .github/                       조직 프로필과 공통 문서
 │  ├─ profile/
 │  │  └─ README.md
-│  ├─ PLAN.md
-│  ├─ AGENTS.md
+│  ├─ PLAN.md                     개발 계획서
 │  └─ docs/
-│     ├─ AI_AGENT_GUIDE.md        안전 계약 원본
-│     ├─ HARDWARE_PLAN.md
-│     ├─ DEMO_SCRIPT.md
-│     └─ SUBMISSION_CHECKLIST.md
+│     ├─ HARDWARE_PLAN.md         부품 선정과 배선
+│     ├─ ROADMAP.md               주차별 일정
+│     ├─ DEMO_SCRIPT.md           시연 영상 대본
+│     ├─ SUBMISSION_CHECKLIST.md  제출 전 점검
+│     └─ GITHUB_OPERATIONS.md     브랜치 · PR 절차
 │
 ├─ OGTECH-embedded/
 │  └─ stm32_smart_tray_controller/
@@ -286,9 +286,8 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 │  ├─ app.py                      HTTP 서버 (:8765)
 │  ├─ safeaid_core.py             시나리오 · 고정 카드 · 안전 분기
 │  ├─ hardware.py                 STM32 UART · 부저 · 진동 · LED
-│  ├─ inventory.py
-│  ├─ firmware/
-│  └─ static/
+│  ├─ inventory.py                장비 점검 목록
+│  └─ requirements.txt
 │
 ├─ OGTECH-frontend/
 │  ├─ server.py                   프록시 (:8780)

@@ -9,7 +9,7 @@
 | 남은 기간 | **4주 3일**                          |
 
 **이 문서 하나만 읽고 작업을 시작할 수 있어야 합니다.**
-규칙은 `AGENTS.md`, 근거·계산은 `OGTECH-llm/docs2/`, 부품 상세는 `OGTECH-llm/docs2/10_부품_선정_BOM.md`에 있습니다.
+안전 경계는 각 저장소 README, 근거·계산은 `OGTECH-llm/docs2/`, 부품 상세는 `OGTECH-llm/docs2/10_부품_선정_BOM.md`에 있습니다.
 
 ---
 
@@ -457,9 +457,9 @@ SHT40 / BMP390 / DS3231 / INMP441 / MAX98357A / IMU / 진동모터 / 스트로�
 | 3 | Jetson SC7 복귀 vs 콜드 부팅                                     | W1   | HW   |
 | 4 | HDMI + USB 능동 연장 케이블 길이·신호                           | W2   | HW   |
 | 5 | 배터리 4S5P(360 Wh) vs 시연용 4S3P(216 Wh)                       | W2   | HW   |
-| 6 | 제품 표시명 (저장소명`smartaid-*`는 고정)                      | W2   | PM   |
+| ~~6~~ | ~~제품 표시명~~ — 2026-08-20 확정. 팀 `OGTECH` / 조직 `2026-ESCW-OGTECH` / 저장소 `OGTECH-*` / 제품 `SafeAid Kit` | 완료 | PM |
 | 7 | 커스텀 PCB vs 만능기판                                           | W1   | HW   |
-| 8 | 팀명 확정 (제출 파일명에 필요)                                   | W2   | PM   |
+| ~~8~~ | ~~팀명 확정~~ — 2026-08-20 **OGTECH** 확정 | 완료 | PM |
 
 ---
 
@@ -467,8 +467,7 @@ SHT40 / BMP390 / DS3231 / INMP441 / MAX98357A / IMU / 진동모터 / 스트로�
 
 | 문서                                          | 내용                               |
 | --------------------------------------------- | ---------------------------------- |
-| `AGENTS.md` / `CLAUDE.md`                 | 작업 규칙, 안전 계약, LLM·UI 규격 |
-| `OGTECH-org/docs/AI_AGENT_GUIDE.md`       | 안전 계약 원본 (충돌 시 우선)      |
+| `OGTECH-org/README.md`                    | 저장소 안내와 안전 경계 요약       |
 | `OGTECH-org/docs/HARDWARE_PLAN.md`        | 하드웨어 요약                      |
 | `OGTECH-org/docs/DEMO_SCRIPT.md`          | 3분 영상 스토리보드                |
 | `OGTECH-org/docs/SUBMISSION_CHECKLIST.md` | 제출 체크리스트                    |
