@@ -280,7 +280,7 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 │
 ├─ OGTECH-embedded/
 │  └─ stm32_smart_tray_controller/
-│     └─ stm32_smart_tray_controller.ino
+│     └─ stm32_smart_tray_controller.ino   STM32 HAL 상시 계층 펌웨어
 │
 ├─ OGTECH-backend/
 │  ├─ app.py                      HTTP 서버 (:8765)
@@ -290,22 +290,16 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 │  └─ requirements.txt
 │
 ├─ OGTECH-frontend/
-│  ├─ server.py                   프록시 (:8780)
-│  ├─ index.html
-│  ├─ styles.css
-│  ├─ js/
-│  │  ├─ app.js
-│  │  ├─ api.js
-│  │  ├─ config.js
-│  │  ├─ data.js
-│  │  └─ features/
+│  ├─ server.py                   키오스크 서버 (:8780)
 │  ├─ MAP/
 │  │  ├─ map_engine.py            GraphML · OSM XML → 보행로 그래프
 │  │  ├─ gps_service.py           Air530 NMEA 파싱 · fix 판정
 │  │  ├─ navigation_service.py    트레일 이탈 · 복귀 방위/거리
-│  │  ├─ position_history.py      위치 로그 · 역추적
+│  │  ├─ position_history.py      위치 로그 · 체크포인트 역추적
 │  │  ├─ solar_service.py         일출 · 일몰 · 시민박명
-│  │  └─ static/
+│  │  ├─ jetson/                  systemd 유닛 · 전원 게이팅
+│  │  ├─ TEST_images/             화면 캡처 (1024×600)
+│  │  └─ 시연용/                  ★ 현재 키오스크 UI (video.html)
 │  └─ tests/
 │
 └─ OGTECH-llm/
