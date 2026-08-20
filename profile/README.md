@@ -100,8 +100,8 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
   <details>
     <summary>센서 · 전원 구성 상세설명 ⏬</summary>
 
-  - **CO**: 전기화학식(ZE07-CO / ZE15-CO). MQ 시리즈는 히터 소비전력이 상시 예산의 2배라 **채택하지 않습니다.**
-  - **환경**: SHT40(온·습도) + BMP390(기압). 기압 추세로 국지 기상을 추정합니다.
+  - **CO**: 전기화학식(ZE16B-CO). MQ 시리즈는 히터 소비전력이 상시 예산의 2배라 **채택하지 않습니다.**
+  - **환경**: 현재 결선은 **DHT11**(온·습도). SHT40 + BMP390(기압)은 미연결 목표 구성입니다.
   - **측위·시각**: Air530 GNSS + MMC5983MA(지자기) + IMU + DS3231 RTC.
   - **물리 출력**: IP67 압전 부저 · 진동 모터 · 고휘도 스트로브 · 물리 버튼 3개.
   - **전원**: 4S Li-ion 21700(330 Wh) + 접이식 태양광 + BQ24650 MPPT.
@@ -219,11 +219,11 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 
 ### Embedded
 
-<img src="https://img.shields.io/badge/STM32F401RET6-03234B?style=for-the-badge&logo=stmicroelectronics&logoColor=white">
+<img src="https://img.shields.io/badge/STM32H7A3ZI--Q-03234B?style=for-the-badge&logo=stmicroelectronics&logoColor=white">
 <img src="https://img.shields.io/badge/Arduino-008184?style=for-the-badge&logo=arduino&logoColor=white">
 <img src="https://img.shields.io/badge/C/C++-00599C?style=for-the-badge&logo=cplusplus&logoColor=white">
 <img src="https://img.shields.io/badge/Air530%20GNSS-4B8BBE?style=for-the-badge&logoColor=white">
-<img src="https://img.shields.io/badge/ZE07--CO-8B1E1E?style=for-the-badge&logoColor=white">
+<img src="https://img.shields.io/badge/ZE16B--CO-8B1E1E?style=for-the-badge&logoColor=white">
 
 ### Backend
 
@@ -279,8 +279,9 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 │     └─ GITHUB_OPERATIONS.md     브랜치 · PR 절차
 │
 ├─ OGTECH-embedded/
-│  └─ stm32_smart_tray_controller/
-│     └─ stm32_smart_tray_controller.ino   STM32 HAL 상시 계층 펌웨어
+│  └─ Core/
+│     ├─ Inc/                     드라이버 인터페이스 4개
+│     └─ Src/                     air530_gps · dht11 · ze16b_co · sensor_app · main
 │
 ├─ OGTECH-backend/
 │  ├─ app.py                      HTTP 서버 (:8765)
