@@ -9,7 +9,7 @@
 | 남은 기간 | **4주 3일**                          |
 
 **이 문서 하나만 읽고 작업을 시작할 수 있어야 합니다.**
-규칙은 `AGENTS.md`, 근거·계산은 `smartaid-llm/docs2/`, 부품 상세는 `smartaid-llm/docs2/10_부품_선정_BOM.md`에 있습니다.
+규칙은 `AGENTS.md`, 근거·계산은 `OGTECH-llm/docs2/`, 부품 상세는 `OGTECH-llm/docs2/10_부품_선정_BOM.md`에 있습니다.
 
 ---
 
@@ -246,7 +246,7 @@ MQ 시리즈 가스 센서 / 벡터 RAG·재랭커 / 미세조정 / 멀티모달
 
 # 7. 컴포넌트별 작업 목록
 
-## 7.1 `smartaid-embedded` — 하드웨어 리드
+## 7.1 `OGTECH-embedded` — 하드웨어 리드
 
 **STM32는 트레이 컨트롤러가 아니라 상시 전원 관리자입니다. 기존 `.ino`는 전면 재작성입니다.**
 
@@ -261,7 +261,7 @@ MQ 시리즈 가스 센서 / 벡터 RAG·재랭커 / 미세조정 / 멀티모달
 - [ ] Serial Protocol 구현 (`GET_FIX` / `GET_ENV` / `GET_HEADING` / `GET_POWER` / `GET_TRACK` / `MARK_WAYPOINT` / `SET_ALARM` / `DISTRESS` / `JETSON PWR`)
 - [ ] **GNSS 미수신 시 좌표를 추정으로 채우지 않을 것** — `{"fix":false,"last_age_s":840}`
 
-## 7.2 `smartaid-backend` — 하드웨어 리드 + PM
+## 7.2 `OGTECH-backend` — 하드웨어 리드 + PM
 
 - [ ] 벡터 타일 서빙 (MBTiles/PMTiles) + 캐시 상한
 - [ ] 트레일 그래프 로더 + A*/Dijkstra 경로 탐색
@@ -274,7 +274,7 @@ MQ 시리즈 가스 센서 / 벡터 RAG·재랭커 / 미세조정 / 멀티모달
 - [ ] STM32 Serial 브리지
 - [ ] 자가진단 (센서 응답·타일 존재·모델 로드·메모리 게이트)
 
-## 7.3 `smartaid-frontend` — UI/문서/PM 리드
+## 7.3 `OGTECH-frontend` — UI/문서/PM 리드
 
 - [ ] 지도 뷰 (WebGL 벡터 렌더링, `backdrop-filter`·blur 금지)
 - [ ] **글랜서블 4개** — 좌표 상태 / 남은 일조 시간 / 배터리 잔여 일수 / 트레일 이탈 여부
@@ -286,7 +286,7 @@ MQ 시리즈 가스 센서 / 벡터 RAG·재랭커 / 미세조정 / 멀티모달
 - [ ] `DEMO` 배지 — 모의 값 혼입 시 숨기지 않음
 - [ ] 터치 타깃 80 px / 본문 20 px 준수 검사
 
-## 7.4 `smartaid-llm` — LLM 리드
+## 7.4 `OGTECH-llm` — LLM 리드
 
 ```text
 config/
@@ -468,11 +468,11 @@ SHT40 / BMP390 / DS3231 / INMP441 / MAX98357A / IMU / 진동모터 / 스트로�
 | 문서                                          | 내용                               |
 | --------------------------------------------- | ---------------------------------- |
 | `AGENTS.md` / `CLAUDE.md`                 | 작업 규칙, 안전 계약, LLM·UI 규격 |
-| `smartaid-org/docs/AI_AGENT_GUIDE.md`       | 안전 계약 원본 (충돌 시 우선)      |
-| `smartaid-org/docs/HARDWARE_PLAN.md`        | 하드웨어 요약                      |
-| `smartaid-org/docs/DEMO_SCRIPT.md`          | 3분 영상 스토리보드                |
-| `smartaid-org/docs/SUBMISSION_CHECKLIST.md` | 제출 체크리스트                    |
-| `smartaid-org/docs/GITHUB_OPERATIONS.md`    | GitHub 브랜치·PR·공개 운영 절차   |
-| `smartaid-llm/docs2/`                       | 공개 조사·계산 근거               |
-| `smartaid-llm/docs2/10_부품_선정_BOM.md`    | **부품 정본**                |
-| `smartaid-llm/MAP/`                         | 오프라인 지도 변환·경로 계산 검증 앱 |
+| `OGTECH-org/docs/AI_AGENT_GUIDE.md`       | 안전 계약 원본 (충돌 시 우선)      |
+| `OGTECH-org/docs/HARDWARE_PLAN.md`        | 하드웨어 요약                      |
+| `OGTECH-org/docs/DEMO_SCRIPT.md`          | 3분 영상 스토리보드                |
+| `OGTECH-org/docs/SUBMISSION_CHECKLIST.md` | 제출 체크리스트                    |
+| `OGTECH-org/docs/GITHUB_OPERATIONS.md`    | GitHub 브랜치·PR·공개 운영 절차   |
+| `OGTECH-llm/docs2/`                       | 공개 조사·계산 근거               |
+| `OGTECH-llm/docs2/10_부품_선정_BOM.md`    | **부품 정본**                |
+| `OGTECH-llm/MAP/`                         | 오프라인 지도 변환·경로 계산 검증 앱 |

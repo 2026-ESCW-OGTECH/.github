@@ -1,6 +1,6 @@
-# SmartAid-Kit 조직 공통 문서
+# 2026-ESCW-OGTECH 조직 공통 문서
 
-이 저장소는 GitHub 조직 `SmartAid-Kit`의 프로필과 공통 작업 문서를 관리합니다.
+이 저장소는 GitHub 조직 `2026-ESCW-OGTECH`의 프로필과 공통 작업 문서를 관리합니다.
 
 ## 시작점
 
@@ -13,9 +13,9 @@
 
 ## 저장소
 
-- `smartaid-backend`: 안전 분기·지도·일출몰·장치 API
-- `smartaid-embedded`: STM32 상시 계층과 센서 허브
-- `smartaid-frontend`: 키오스크 UI와 backend 프록시
-- `smartaid-llm`: 제한형 LLM 하네스·평가·지도 검증
+- `OGTECH-backend`: 안전 분기·지도·일출몰·장치 API
+- `OGTECH-embedded`: STM32 상시 계층과 센서 허브
+- `OGTECH-frontend`: 키오스크 UI와 backend 프록시
+- `OGTECH-llm`: 제한형 LLM 하네스·평가·지도 검증
 
 공개 전환은 전체 이력의 비밀값·개인정보·실제 GPS 트랙·라이선스 점검이 끝나고 사용자 승인을 받은 뒤에만 진행합니다.

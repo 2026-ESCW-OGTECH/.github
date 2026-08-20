@@ -1,17 +1,17 @@
 # SafeAid Kit GitHub 운영 절차
 
-이 문서는 SmartAid-Kit 워크스페이스의 커밋·브랜치·PR·저장소 메타데이터·공개 전환 절차 정본입니다.
+이 문서는 2026-ESCW-OGTECH 워크스페이스의 커밋·브랜치·PR·저장소 메타데이터·공개 전환 절차 정본입니다.
 앞으로 GitHub 업로드 작업은 긴 일회성 프롬프트를 다시 작성하지 않고 이 문서와 `AGENTS.md`를 따릅니다.
 
 ## 1. 적용 범위
 
 | 로컬 폴더 | 원격 저장소 | 공개 후보 |
 |---|---|---|
-| `smartaid-org/` | `SmartAid-Kit/.github` | 예 |
-| `smartaid-backend/` | `SmartAid-Kit/smartaid-backend` | 예 |
-| `smartaid-embedded/` | `SmartAid-Kit/smartaid-embedded` | 예 |
-| `smartaid-frontend/` | `SmartAid-Kit/smartaid-frontend` | 예 |
-| `smartaid-llm/` | `SmartAid-Kit/smartaid-llm` | 예 |
+| `OGTECH-org/` | `2026-ESCW-OGTECH/.github` | 예 |
+| `OGTECH-backend/` | `2026-ESCW-OGTECH/OGTECH-backend` | 예 |
+| `OGTECH-embedded/` | `2026-ESCW-OGTECH/OGTECH-embedded` | 예 |
+| `OGTECH-frontend/` | `2026-ESCW-OGTECH/OGTECH-frontend` | 예 |
+| `OGTECH-llm/` | `2026-ESCW-OGTECH/OGTECH-llm` | 예 |
 | `Vscode-Workspace-Setting/` | 동명 저장소 | 아니요. 계속 private 유지 |
 
 워크스페이스 루트는 Git 저장소가 아닙니다. 루트의 `.venv/`, `legacy/`, 제출 서류, 작업 로그는 컴포넌트 저장소의 스테이징 대상이 아닙니다. 다만 과거 원격 이력의 공개 위험은 별도로 검사합니다.
@@ -30,9 +30,9 @@
 
 ## 3. `.github` 저장소 파일 구분
 
-로컬 `smartaid-org/`는 원격 `SmartAid-Kit/.github`입니다.
+로컬 `OGTECH-org/`는 원격 `2026-ESCW-OGTECH/.github`입니다.
 
-- `profile/README.md`: `github.com/SmartAid-Kit`에 렌더링되는 조직 프로필입니다.
+- `profile/README.md`: `github.com/2026-ESCW-OGTECH`에 렌더링되는 조직 프로필입니다.
 - 루트 `README.md`: `.github` 저장소 자체 안내입니다. 조직 프로필이 아닙니다.
 - `PLAN.md`: 작품 정의와 P0 작업 정본입니다.
 - `AGENTS.md`·`CLAUDE.md`: 에이전트 작업 규칙 정본입니다.
@@ -42,15 +42,15 @@
 
 ## 4. 공개 파일 경계
 
-### 4.1 `smartaid-llm/docs2/`
+### 4.1 `OGTECH-llm/docs2/`
 
 공개 커밋 대상은 공개 인덱스에 등재된 조사 근거·계산·BOM입니다. 내부 검토 자료는 로컬에만 유지하며 공개 인덱스·README·PLAN에서 언급하지 않습니다.
 
-내부 자료는 `smartaid-llm/.gitignore`의 `docs2` 제외 규칙으로 차단합니다. 과거에 이미 추적된 상태가 발견되면 임의로 히스토리를 고치지 말고 중단하여 보고합니다.
+내부 자료는 `OGTECH-llm/.gitignore`의 `docs2` 제외 규칙으로 차단합니다. 과거에 이미 추적된 상태가 발견되면 임의로 히스토리를 고치지 말고 중단하여 보고합니다.
 
-기존 `smartaid-llm/docs/`는 이전 도메인 아카이브입니다. 새 설계 근거로 사용하지 않습니다. 현재 원격에 이미 존재하므로 `smartaid-llm/README.md`에서 아카이브이며 현재 정본이 아니라는 점을 명시하고, 공개 전환 게이트에서 유지·삭제 여부를 별도로 결정합니다.
+기존 `OGTECH-llm/docs/`는 이전 도메인 아카이브입니다. 새 설계 근거로 사용하지 않습니다. 현재 원격에 이미 존재하므로 `OGTECH-llm/README.md`에서 아카이브이며 현재 정본이 아니라는 점을 명시하고, 공개 전환 게이트에서 유지·삭제 여부를 별도로 결정합니다.
 
-### 4.2 `smartaid-llm/MAP/`
+### 4.2 `OGTECH-llm/MAP/`
 
 `MAP/`은 오프라인 지도 변환·경로 계산 검증 앱입니다. 다음은 공개 커밋 대상입니다.
 
@@ -70,7 +70,7 @@
 
 MAP 내부 `.gitignore`가 위 산출물을 실제로 제외하는지 매 PR 전에 `git check-ignore -v`로 확인합니다. 샘플 GraphML은 OSM 파생 데이터와 고정 DEMO 좌표만 허용합니다. Air530 실측 좌표나 사용자 이동 기록이 섞이면 커밋을 중단합니다.
 
-현재 ESP32 캡처 코드는 저장소 이력 보존을 위해 즉시 삭제하지 않습니다. 카메라는 현 도메인 범위 밖이며 현재 미사용이라는 사실을 `smartaid-embedded/README.md`에 명시합니다. 새 기능으로 소개하지 않습니다.
+현재 ESP32 캡처 코드는 저장소 이력 보존을 위해 즉시 삭제하지 않습니다. 카메라는 현 도메인 범위 밖이며 현재 미사용이라는 사실을 `OGTECH-embedded/README.md`에 명시합니다. 새 기능으로 소개하지 않습니다.
 
 ## 5. 반복 업로드 절차
 
@@ -139,7 +139,7 @@ python -B -m unittest discover -s tests -v
 python -c "import app; print('import ok')"
 python -B -m unittest discover -v
 
-# MAP: smartaid-llm/MAP에서 실행
+# MAP: OGTECH-llm/MAP에서 실행
 python -B -m unittest discover -s tests -v
 ```
 
@@ -187,7 +187,7 @@ OSM 데이터나 파생 타일·그래프를 표시하는 화면에는 사용자
 - llama.cpp: MIT
 - 확정된 TTS·STT·지도 렌더러와 데이터셋 라이선스
 
-MAP 샘플의 상세 출처는 `smartaid-llm/MAP/sample_data/ATTRIBUTION.md`를 정본으로 사용합니다. OSM 귀속을 UI에 표시하는 작업은 backend 또는 frontend P0 이슈의 완료 조건에 포함합니다.
+MAP 샘플의 상세 출처는 `OGTECH-llm/MAP/sample_data/ATTRIBUTION.md`를 정본으로 사용합니다. OSM 귀속을 UI에 표시하는 작업은 backend 또는 frontend P0 이슈의 완료 조건에 포함합니다.
 
 ## 7. 공개 전환 게이트
 
@@ -212,7 +212,7 @@ MAP 샘플의 상세 출처는 `smartaid-llm/MAP/sample_data/ATTRIBUTION.md`를 
 
 일반 업로드:
 
-> 현재 변경분을 `AGENTS.md`와 `smartaid-org/docs/GITHUB_OPERATIONS.md`에 따라 GitHub draft PR로 준비해. 단계 로그를 남기고 각 GATE에서 멈춰.
+> 현재 변경분을 `AGENTS.md`와 `OGTECH-org/docs/GITHUB_OPERATIONS.md`에 따라 GitHub draft PR로 준비해. 단계 로그를 남기고 각 GATE에서 멈춰.
 
 PR 병합 이후 정리:
 
