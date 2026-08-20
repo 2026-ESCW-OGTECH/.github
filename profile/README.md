@@ -17,6 +17,10 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 
 ## 📸 Overview
 
+<img src="assets/01_%EB%B2%A0%EC%9D%B4%EC%8A%A4%EC%BA%A0%ED%94%84_%EC%8B%9C%EC%9E%91.png" width="800">
+
+*7인치 1024×600 실기 화면. 상단 계기 스트립은 화면을 켠 순간 1초 안에 읽히도록 고정돼 있습니다.*
+
 [시스템 전체 구성 그림]
 
 <br>
@@ -40,7 +44,10 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
   네트워크·타일 서버·외부 SDK가 전혀 없어야 성립하는 요구사항이라 지도 엔진을 자체 구현했습니다.
   **방위·거리·경로는 전부 코드가 계산합니다. LLM은 이 값을 만들지 않고 읽어 주기만 합니다.**
 
-  [오프라인 지도 화면 그림]
+  <img src="assets/02_%EB%AA%A9%EC%A0%81%EC%A7%80_%EA%B2%BD%EB%A1%9C_%EC%95%88%EB%82%B4.png" width="760">
+
+  *목적지를 지정하면 보행로 그래프 위에서 경로를 계산합니다. `292° 231 m`는 코드가 계산한 값이며
+  `MAP ENGINE` 배지로 출처를 화면에 명시합니다. 직선거리가 아니라 보행로를 따라간 거리입니다.*
 
   <br>
   <details>
@@ -58,7 +65,10 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
   위도·경도·날짜만으로 일출·일몰·시민박명을 **오프라인 천문 계산**으로 구합니다.
   최근 보행 속도와 복귀 거리를 비교해 되돌아설 시점을 역산하고, 여유가 부족해지면 적색 경고와 음성으로 개입합니다.
 
-  [남은 일조 시간 카운트다운 화면 그림]
+  <img src="assets/04_%EC%9D%BC%EC%A1%B0%EC%8B%9C%EA%B0%84_%EB%B6%80%EC%A1%B1_%EA%B2%BD%EA%B3%A0.png" width="760">
+
+  *사용자가 묻지 않았는데 장치가 먼저 개입하는 장면입니다. 남은 일조 시간과 복귀 소요 시간을 비교해
+  임계에 닿으면 적색 배너와 음성이 나가고, 동시에 복귀 경로 `112° 231 m`를 계산해 보여 줍니다.*
 
   <br>
   <details>
@@ -78,7 +88,20 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
   전기화학식 CO 센서를 상시 계층에 직결해, **Jetson 전원이 꺼져 있어도** 부저·진동·스트로브가 울립니다.
   경보는 Jetson 부팅을 기다리지 않습니다.
 
-  [이중 전원 계층 블록도 그림]
+  ```mermaid
+  flowchart LR
+      BAT["배터리 · 태양광 MPPT"] --> MCU["STM32H7A3ZI-Q<br/>상시 계층"]
+      BAT -->|"MOSFET 게이트"| GATE{"전원 차단"}
+      MCU -->|"제어"| GATE
+      GATE --> JET["Jetson Xavier NX<br/>기본 OFF"]
+      CO["ZE16B-CO"] --> MCU
+      ENV["DHT11 온습도"] --> MCU
+      GPS["Air530 GNSS"] --> MCU
+      MCU -->|"임계 초과 시 즉시"| ALARM["부저 · 진동 · 스트로브"]
+      JET -.->|"필요할 때만 기동"| UI["화면 · 음성 응답"]
+  ```
+
+  *CO 경보 경로는 Jetson을 거치지 않습니다. 부팅을 기다리지 않고 상시 계층이 직접 울립니다.*
 
   <br>
   <details>
@@ -113,7 +136,19 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
   경로·방위·거리는 **출력 스키마에 숫자 필드 자체가 없어** 환각할 자리가 없습니다.
   생명 관련 질문은 모델에 도달하기 전에 키워드 게이트가 잡아 검수된 고정 카드로 보냅니다.
 
-  [응답 경로 A/B 분기 그림]
+  ```mermaid
+  flowchart TD
+      V["음성 질의"] --> STT["whisper.cpp<br/>CPU"]
+      STT --> GATE{"키워드 게이트"}
+      GATE -->|"생명 관련 6개 라벨"| CARD["검수된 고정 카드"]
+      CARD --> TTS1["TTS 직행<br/>목표 2.0 s"]
+      GATE -->|"나머지 7개 라벨"| LLM["Qwen2.5 1.5B<br/>카드 2~4줄 다듬기"]
+      LLM --> TTS2["문장 단위 스트리밍 TTS<br/>목표 3.5 s"]
+      GATE -->|"refuse 키워드"| REFUSE["차단 카드"]
+      LLM -.->|"검증 실패 · 2초 초과"| CARD
+  ```
+
+  *경로 B가 더 빠르고 동시에 더 안전합니다. 생명 관련 응답에서 모델을 빼는 것은 성능 손해가 아닙니다.*
 
   <br>
   <details>
@@ -168,7 +203,15 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
   Jetson에 네트워크가 없으므로 **외부 프레임워크·CDN·런타임 의존을 두지 않았습니다.**
   backend는 `8765`, frontend 프록시는 `8780`을 쓰고, Chromium은 `http://127.0.0.1:8780/` 단일 kiosk 창으로 뜹니다.
 
-  [백엔드 모듈 구성 그림]
+  ```mermaid
+  flowchart LR
+      UI["키오스크 UI<br/>:8780"] --> API["HTTP API<br/>:8765"]
+      API --> CORE["safeaid_core<br/>시나리오 · 고정 카드 · 안전 분기"]
+      API --> HW["hardware<br/>STM32 UART · 부저 · 진동"]
+      API --> INV["inventory<br/>장비 점검"]
+      CORE --> MAPE["지도 · 일출몰 · 항법<br/>전부 로컬 계산"]
+      HW <--> STM["STM32 상시 계층"]
+  ```
 
   <br>
   <details>
@@ -183,7 +226,10 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 
   #### 2. Device UI (Web)
 
-  [키오스크 UI 화면 그림]
+  | | |
+  |---|---|
+  | <img src="assets/03_%EB%AA%A9%EC%A0%81%EC%A7%80_%EB%8F%84%EC%B0%A9.png" width="380"><br>**목적지 도착** — 안내 카드와 음성 | <img src="assets/05_%EB%B2%A0%EC%9D%B4%EC%8A%A4%EC%BA%A0%ED%94%84_%EB%B3%B5%EA%B7%80_%EA%B2%BD%EB%A1%9C.png" width="380"><br>**복귀 경로** — 역방향 재계산 |
+  | <img src="assets/07_%EC%B2%B4%ED%81%AC%ED%8F%AC%EC%9D%B8%ED%8A%B8_%EC%A0%80%EC%9E%A5.png" width="380"><br>**체크포인트 저장** — 물리 버튼으로도 동작 | <img src="assets/08_%EC%95%BC%EA%B0%84_%EB%AA%A8%EB%93%9C.png" width="380"><br>**야간 모드** — 적색 단색, 암순응 보호 |
 
   <br>
   <details>
@@ -251,7 +297,15 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 
 ## 🗂 Architecture
 
-[레이어 구조 그림]
+```mermaid
+flowchart TD
+    U["사용자<br/>음성 · 물리 버튼 · 터치"] --> FE["OGTECH-frontend :8780<br/>Chromium kiosk · 오프라인 지도"]
+    FE --> BE["OGTECH-backend :8765<br/>안전 분기 · 검수된 고정 카드"]
+    BE --> ENG["지도 · 일출몰 · 기압 추정<br/>전부 로컬 계산"]
+    BE <--> EMB["OGTECH-embedded<br/>STM32 상시 계층"]
+    BE --> LLM["OGTECH-llm<br/>분류 · 대상 추출 · 문장 다듬기"]
+    EMB --> ALARM["부저 · 진동 · 스트로브"]
+```
 
 ```text
 사용자 (음성 · 물리 버튼 · 터치)
