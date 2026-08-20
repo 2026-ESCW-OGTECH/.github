@@ -1,17 +1,17 @@
 # SafeAid Kit GitHub 운영 절차
 
-이 문서는 2026-ESCW-OGTECH 워크스페이스의 커밋·브랜치·PR·저장소 메타데이터·공개 전환 절차 정본입니다.
+이 문서는 2026-ESW-OGTECH 워크스페이스의 커밋·브랜치·PR·저장소 메타데이터·공개 전환 절차 정본입니다.
 앞으로 GitHub 업로드 작업은 긴 일회성 프롬프트를 다시 작성하지 않고 이 문서와 `AGENTS.md`를 따릅니다.
 
 ## 1. 적용 범위
 
 | 로컬 폴더 | 원격 저장소 | 공개 후보 |
 |---|---|---|
-| `OGTECH-org/` | `2026-ESCW-OGTECH/.github` | 예 |
-| `OGTECH-backend/` | `2026-ESCW-OGTECH/OGTECH-backend` | 예 |
-| `OGTECH-embedded/` | `2026-ESCW-OGTECH/OGTECH-embedded` | 예 |
-| `OGTECH-frontend/` | `2026-ESCW-OGTECH/OGTECH-frontend` | 예 |
-| `OGTECH-llm/` | `2026-ESCW-OGTECH/OGTECH-llm` | 예 |
+| `OGTECH-org/` | `2026-ESW-OGTECH/.github` | 예 |
+| `OGTECH-backend/` | `2026-ESW-OGTECH/OGTECH-backend` | 예 |
+| `OGTECH-embedded/` | `2026-ESW-OGTECH/OGTECH-embedded` | 예 |
+| `OGTECH-frontend/` | `2026-ESW-OGTECH/OGTECH-frontend` | 예 |
+| `OGTECH-llm/` | `2026-ESW-OGTECH/OGTECH-llm` | 예 |
 | `Vscode-Workspace-Setting/` | 동명 저장소 | 아니요. 계속 private 유지 |
 
 워크스페이스 루트는 Git 저장소가 아닙니다. 루트의 `.venv/`, `legacy/`, 제출 서류, 작업 로그는 컴포넌트 저장소의 스테이징 대상이 아닙니다. 다만 과거 원격 이력의 공개 위험은 별도로 검사합니다.
@@ -30,9 +30,9 @@
 
 ## 3. `.github` 저장소 파일 구분
 
-로컬 `OGTECH-org/`는 원격 `2026-ESCW-OGTECH/.github`입니다.
+로컬 `OGTECH-org/`는 원격 `2026-ESW-OGTECH/.github`입니다.
 
-- `profile/README.md`: `github.com/2026-ESCW-OGTECH`에 렌더링되는 조직 프로필입니다.
+- `profile/README.md`: `github.com/2026-ESW-OGTECH`에 렌더링되는 조직 프로필입니다.
 - 루트 `README.md`: `.github` 저장소 자체 안내입니다. 조직 프로필이 아닙니다.
 - `PLAN.md`: 작품 정의와 P0 작업 정본입니다.
 - 에이전트 작업 규칙(`AGENTS.md`·`CLAUDE.md`)은 2026-08-20부터 **저장소에 두지 않고 워크스페이스 로컬에만 둡니다.** 심사 대상 저장소에는 코드와 설명 문서만 남깁니다.

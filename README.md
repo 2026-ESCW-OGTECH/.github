@@ -1,4 +1,4 @@
-# 2026-ESCW-OGTECH / .github
+# 2026-ESW-OGTECH / .github
 
 팀 **OGTECH**의 조직 공통 저장소입니다. 작품 이름은 **SafeAid Kit**입니다.
 
@@ -12,10 +12,10 @@
 
 | 저장소 | 무엇이 들어 있나 | 언어 |
 |---|---|---|
-| [OGTECH-embedded](https://github.com/2026-ESCW-OGTECH/OGTECH-embedded) | STM32 상시 계층 펌웨어. CO 경보·센서 허브·GNSS 로거·Jetson 전원 게이팅 | C++ (Arduino) |
-| [OGTECH-backend](https://github.com/2026-ESCW-OGTECH/OGTECH-backend) | 안전 분기 엔진과 장치 API 서버 (`:8765`) | Python |
-| [OGTECH-frontend](https://github.com/2026-ESCW-OGTECH/OGTECH-frontend) | 7인치 키오스크 UI와 **오프라인 지도 엔진** (`:8780`) | Python · JavaScript |
-| [OGTECH-llm](https://github.com/2026-ESCW-OGTECH/OGTECH-llm) | 온디바이스 음성 파이프라인(STT→분기→LLM→TTS)과 평가 하네스 | Python |
+| [OGTECH-embedded](https://github.com/2026-ESW-OGTECH/OGTECH-embedded) | STM32 상시 계층 펌웨어. CO·온습도·GNSS 센서 허브 | C (STM32 HAL) |
+| [OGTECH-backend](https://github.com/2026-ESW-OGTECH/OGTECH-backend) | 안전 분기 엔진과 장치 API 서버 (`:8765`) | Python |
+| [OGTECH-frontend](https://github.com/2026-ESW-OGTECH/OGTECH-frontend) | 7인치 키오스크 UI와 **오프라인 지도 엔진** (`:8780`) | Python · JavaScript |
+| [OGTECH-llm](https://github.com/2026-ESW-OGTECH/OGTECH-llm) | 온디바이스 음성 파이프라인(STT→분기→LLM→TTS)과 평가 하네스 | Python |
 
 읽는 순서를 하나만 고른다면 **OGTECH-embedded → OGTECH-frontend** 입니다.
 이 작품의 핵심 주장인 "Jetson이 꺼져 있어도 감시는 계속된다"가 그 두 저장소에서 증명됩니다.

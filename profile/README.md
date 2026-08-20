@@ -220,8 +220,8 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 ### Embedded
 
 <img src="https://img.shields.io/badge/STM32H7A3ZI--Q-03234B?style=for-the-badge&logo=stmicroelectronics&logoColor=white">
-<img src="https://img.shields.io/badge/Arduino-008184?style=for-the-badge&logo=arduino&logoColor=white">
-<img src="https://img.shields.io/badge/C/C++-00599C?style=for-the-badge&logo=cplusplus&logoColor=white">
+<img src="https://img.shields.io/badge/C%20(STM32%20HAL)-00599C?style=for-the-badge&logo=c&logoColor=white">
+<img src="https://img.shields.io/badge/STM32CubeIDE-03234B?style=for-the-badge&logo=stmicroelectronics&logoColor=white">
 <img src="https://img.shields.io/badge/Air530%20GNSS-4B8BBE?style=for-the-badge&logoColor=white">
 <img src="https://img.shields.io/badge/ZE16B--CO-8B1E1E?style=for-the-badge&logoColor=white">
 
@@ -314,10 +314,10 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 
 | 저장소 | 역할 |
 | ---- | ---- |
-| [OGTECH-frontend](https://github.com/2026-ESCW-OGTECH/OGTECH-frontend) | 7인치 키오스크 UI, 오프라인 지도 렌더링, backend 프록시 |
-| [OGTECH-backend](https://github.com/2026-ESCW-OGTECH/OGTECH-backend) | 안전 분기, 검수된 고정 카드, 지도·시간 엔진, 하드웨어 API |
-| [OGTECH-embedded](https://github.com/2026-ESCW-OGTECH/OGTECH-embedded) | STM32 상시 전원 관리자 · 센서 허브 · GNSS 로거 펌웨어 |
-| [OGTECH-llm](https://github.com/2026-ESCW-OGTECH/OGTECH-llm) | LLM 하네스, 14 라벨 평가, STT/LLM 기준선 측정 |
+| [OGTECH-frontend](https://github.com/2026-ESW-OGTECH/OGTECH-frontend) | 7인치 키오스크 UI, 오프라인 지도 렌더링, backend 프록시 |
+| [OGTECH-backend](https://github.com/2026-ESW-OGTECH/OGTECH-backend) | 안전 분기, 검수된 고정 카드, 지도·시간 엔진, 하드웨어 API |
+| [OGTECH-embedded](https://github.com/2026-ESW-OGTECH/OGTECH-embedded) | STM32 상시 전원 관리자 · 센서 허브 · GNSS 로거 펌웨어 |
+| [OGTECH-llm](https://github.com/2026-ESW-OGTECH/OGTECH-llm) | LLM 하네스, 14 라벨 평가, STT/LLM 기준선 측정 |
 
 ## Video
 

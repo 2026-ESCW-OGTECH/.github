@@ -457,7 +457,7 @@ SHT40 / BMP390 / DS3231 / INMP441 / MAX98357A / IMU / 진동모터 / 스트로�
 | 3 | Jetson SC7 복귀 vs 콜드 부팅                                     | W1   | HW   |
 | 4 | HDMI + USB 능동 연장 케이블 길이·신호                           | W2   | HW   |
 | 5 | 배터리 4S5P(360 Wh) vs 시연용 4S3P(216 Wh)                       | W2   | HW   |
-| ~~6~~ | ~~제품 표시명~~ — 2026-08-20 확정. 팀 `OGTECH` / 조직 `2026-ESCW-OGTECH` / 저장소 `OGTECH-*` / 제품 `SafeAid Kit` | 완료 | PM |
+| ~~6~~ | ~~제품 표시명~~ — 2026-08-20 확정. 팀 `OGTECH` / 조직 `2026-ESW-OGTECH` / 저장소 `OGTECH-*` / 제품 `SafeAid Kit` | 완료 | PM |
 | 7 | 커스텀 PCB vs 만능기판                                           | W1   | HW   |
 | ~~8~~ | ~~팀명 확정~~ — 2026-08-20 **OGTECH** 확정 | 완료 | PM |
 
