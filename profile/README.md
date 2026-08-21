@@ -1,4 +1,4 @@
-# 2026ESWContest_free_TBD
+# 2026ESWContest_free_OGTECH
 
 ## 🔖 Intro
 
@@ -94,8 +94,6 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 
   *CO 경보 경로는 Jetson을 거치지 않습니다. 부팅을 기다리지 않고 상시 계층이 직접 울립니다.*
 
-  *CO 경보 경로는 Jetson을 거치지 않습니다. 부팅을 기다리지 않고 상시 계층이 직접 울립니다.*
-
   <br>
   <details>
     <summary>전력 상태(State Machine) 상세설명 ⏬</summary>
@@ -116,9 +114,9 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
   <details>
     <summary>센서 · 전원 구성 상세설명 ⏬</summary>
 
-  - **CO**: 전기화학식(ZE16B-CO). MQ 시리즈는 히터 소비전력이 상시 예산의 2배라 **채택하지 않습니다.**
-  - **환경**: 현재 결선은 **DHT11**(온·습도). SHT40 + BMP390(기압)은 미연결 목표 구성입니다.
-  - **측위·시각**: Air530 GNSS + MMC5983MA(지자기) + IMU + DS3231 RTC.
+  - **CO**: 현재 ZE16B-CO 실장. ZE07-CO / ZE15-CO는 향후 적용 예정(현재 미연결)입니다. MQ 시리즈는 히터 소비전력이 상시 예산의 2배라 **채택하지 않습니다.**
+  - **환경**: 현재 DHT11(온·습도) 실장. SHT40(온·습도) + BMP390(기압)은 향후 적용 예정(현재 미연결)이며, 기압 추세 기반 국지 기상 추정은 BMP390 적용 후 동작합니다.
+  - **측위·시각**: Air530 GNSS(실장) + MMC5983MA(지자기) + IMU + DS3231 RTC — DS3231은 향후 적용 예정(현재 미연결)입니다.
   - **물리 출력**: IP67 압전 부저 · 진동 모터 · 고휘도 스트로브 · 물리 버튼 3개.
   - **전원**: 4S Li-ion 21700(330 Wh) + 접이식 태양광 + BQ24650 MPPT.
   </details>
@@ -130,8 +128,6 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
   생명 관련 질문은 모델에 도달하기 전에 키워드 게이트가 잡아 검수된 고정 카드로 보냅니다.
 
   <img src="assets/d2_%EC%9D%91%EB%8B%B5%EA%B2%BD%EB%A1%9C.png" width="820">
-
-  *경로 B가 더 빠르고 동시에 더 안전합니다. 생명 관련 응답에서 모델을 빼는 것은 성능 손해가 아닙니다.*
 
   *경로 B가 더 빠르고 동시에 더 안전합니다. 생명 관련 응답에서 모델을 빼는 것은 성능 손해가 아닙니다.*
 
@@ -194,11 +190,10 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
   <details>
     <summary>백엔드 module 상세설명 ⏬</summary>
 
-  - **safeaid_core**: 시나리오 정의, 검수된 고정 카드, 안전 분기, 한계 고지(`DISCLAIMER`) 관리.
-  - **API(Handler)**: `ThreadingHTTPServer` 기반 REST 엔드포인트. 상태 조회·명령 수신.
-  - **hardware**: STM32와 UART로 명령/ACK를 교환하고 부저·진동·스트로브·LED를 제어.
-  - **map / solar / navigation**: 지도·일출몰·항법 계산. **전부 로컬 계산이며 네트워크를 타지 않습니다.**
-  - **inventory**: 장비 점검 목록과 런타임 상태 보관(`runtime/`, 커밋하지 않음).
+  - **backend `:8765` — safeaid_core (규칙 라우터 · 카드 렌더러)**: 14라벨 키워드 게이트, refuse 최우선, 생명 라벨은 LLM 판단을 채택하지 않고 검수 고정 카드로 직행. 정본은 OGTECH-llm `Co-LLM/scripts/safeaid_core.py`이며 backend는 바이트 일치가 테스트로 강제되는 사본을 서비스합니다. **LLM 호출 없음.**
+  - **backend API(Handler)**: `ThreadingHTTPServer` 기반 `POST /api/classify` · `POST /api/respond` · `GET /api/card/<id>`. 모든 오류는 JSON으로 응답합니다.
+  - **frontend MAP `:8790` — map_engine / gps_service / navigation_service / solar_service / position_history**: 지도·GPS·트레일 이탈·복귀 방위·일출몰·위치 역추적. **전부 로컬 계산이며 네트워크를 타지 않습니다.**
+  - **frontend MAP `jetson/power_control`**: STM32 전원 게이트와의 연동 자리. 펌웨어·Jetson 파서는 JSONL+CRC16 프로토콜 v1로 통일 완료(호스트 계약 테스트 통과, 실장 검증 대기). 전원 버튼 handshake는 버튼 하드웨어가 없어 아직 성립하지 않음.
   </details>
 
   #### 2. Device UI (Web)
@@ -253,12 +248,11 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white">
 <img src="https://img.shields.io/badge/Jetson%20Xavier%20NX-76B900?style=for-the-badge&logo=nvidia&logoColor=white">
 <img src="https://img.shields.io/badge/http.server-306998?style=for-the-badge&logo=python&logoColor=white">
-<img src="https://img.shields.io/badge/NetworkX-2C3E50?style=for-the-badge&logoColor=white">
-<img src="https://img.shields.io/badge/pySerial-1F6FEB?style=for-the-badge&logoColor=white">
-<img src="https://img.shields.io/badge/SQLite%20FTS5-003B57?style=for-the-badge&logo=sqlite&logoColor=white">
 
 ### Frontend
 
+<img src="https://img.shields.io/badge/NetworkX-2C3E50?style=for-the-badge&logoColor=white">
+<img src="https://img.shields.io/badge/pySerial-1F6FEB?style=for-the-badge&logoColor=white">
 <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
 <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=111827">
@@ -278,17 +272,18 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 
 ```text
 사용자 (음성 · 물리 버튼 · 터치)
-  └─ OGTECH-frontend :8780          Chromium 단일 kiosk + 프록시
-       └─ OGTECH-backend :8765      안전 분기 · 검수된 고정 카드 · 장치 API
-            ├─ 지도 엔진 · 일출몰 · Zambretti   전부 로컬 계산 (LLM 미관여)
-            ├─ OGTECH-embedded → STM32 상시 계층 (CO · 환경 · GNSS · Jetson 전원 게이팅)
-            └─ OGTECH-llm      → 분류 · 대상 추출 · 카드 문장 다듬기만
+  ├─ OGTECH-frontend server.py :8780   Chromium 단일 kiosk + 프록시
+  │    ├─ OGTECH-frontend MAP :8790     오프라인 지도 · GPS · 일출몰 · 장치 API (전부 로컬 계산, LLM 미관여)
+  │    ├─ OGTECH-backend :8765          안전 분기 규칙 엔진 · 검수된 고정 카드 (LLM 없음)
+  │    └─ OGTECH-llm Co-LLM             음성 파이프라인: STT → 키워드 게이트 → LLM(14라벨 분류 1개) → TTS
+  └─ OGTECH-embedded                    STM32H7A3ZI-Q 상시 계층 (CO 경보 · 환경 · GNSS · Jetson 전원 게이팅)
+                                        — Jetson이 꺼져 있어도 CO 판정·부저는 STM32에서 동작
 ```
 
 ## File Architecture
 
 ```
-2026ESWContest_자유공모_TBD_SafeAidKit_파일구조
+2026ESWContest_자유공모_OGTECH_SafeAidKit_파일구조
 .
 ├─ .github/                       조직 프로필과 공통 문서
 │  ├─ profile/
@@ -302,45 +297,51 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 │     └─ GITHUB_OPERATIONS.md     브랜치 · PR 절차
 │
 ├─ OGTECH-embedded/
-│  └─ Core/
-│     ├─ Inc/                     드라이버 인터페이스 4개
-│     └─ Src/                     air530_gps · dht11 · ze16b_co · sensor_app · main
+│  ├─ README.md                   구현/미구현 표 · 검증 상태
+│  ├─ stm32_sentinel/
+│  │  ├─ stm32_sentinel.c         STM32H7A3ZI-Q HAL 상시 계층 펌웨어 (CO 경보 · 부저 · 전원 게이트 · JSONL 텔레메트리 · 명령)
+│  │  ├─ telemetry_protocol.c/.h  Jetson 프로토콜 v1 — JSONL+CRC16 빌더·명령 파서 (HAL 비의존)
+│  │  └─ README.md                연결 · 동작 · 설계 목표
+│  └─ tests/                      호스트(gcc) 테스트 — 펌웨어 시뮬레이션 + Jetson 파서 왕복 계약
 │
 ├─ OGTECH-backend/
-│  ├─ app.py                      HTTP 서버 (:8765)
-│  ├─ safeaid_core.py             시나리오 · 고정 카드 · 안전 분기
-│  ├─ hardware.py                 STM32 UART · 부저 · 진동 · LED
-│  ├─ inventory.py                장비 점검 목록
-│  └─ requirements.txt
+│  ├─ app.py                      안전 분기 규칙 엔진 HTTP 서비스 (:8765, LLM 없음)
+│  ├─ core/safeaid_core.py        규칙 라우터 · 카드 렌더러 (OGTECH-llm 정본의 사본, 일치 강제)
+│  ├─ config/                     keyword_rules.yaml · survival_cards.json (정본 사본)
+│  └─ tests/                      HTTP 계층 8 + 정본 동기화 1
 │
 ├─ OGTECH-frontend/
-│  ├─ server.py                   키오스크 서버 (:8780)
+│  ├─ server.py                   키오스크 프록시 (:8780)
 │  ├─ MAP/
-│  │  ├─ map_engine.py            GraphML · OSM XML → 보행로 그래프
-│  │  ├─ gps_service.py           Air530 NMEA 파싱 · fix 판정
+│  │  ├─ app.py                   지도 · GPS · 장치 API 서버 (:8790)
+│  │  ├─ map_engine.py            GraphML · OSM XML → 보행로 그래프 · Canvas 2D 렌더 데이터
+│  │  ├─ gps_service.py           Air530 NMEA 파싱 · fix 판정 · STM32 텔레메트리 파서
 │  │  ├─ navigation_service.py    트레일 이탈 · 복귀 방위/거리
 │  │  ├─ position_history.py      위치 로그 · 체크포인트 역추적
-│  │  ├─ solar_service.py         일출 · 일몰 · 시민박명
+│  │  ├─ solar_service.py         일출 · 일몰 · 시민박명 (NOAA)
 │  │  ├─ jetson/                  systemd 유닛 · 전원 게이팅
 │  │  ├─ TEST_images/             화면 캡처 (1024×600)
-│  │  └─ 시연용/                  ★ 현재 키오스크 UI (video.html)
+│  │  ├─ tests/                   단위 · 회귀 테스트 80개
+│  │  └─ 시연용/                  ★ 제품 키오스크 화면 (index.html) + 촬영용 (video.html)
 │  └─ tests/
 │
 └─ OGTECH-llm/
-   ├─ config/                     프롬프트 · 키워드 규칙
-   ├─ harness/                    프롬프트 조립 · 스키마 제약
-   ├─ eval/                       14 라벨 분류 · refuse 누출 평가
-   ├─ runner/
-   ├─ results/
-   └─ docs2/                      근거 · 실측 기록
+   ├─ Co-LLM/                     ★ 음성 파이프라인 본체
+   │  ├─ scripts/                 STT · 키워드 게이트 · LLM 분류 · TTS · safeaid_core(정본)
+   │  ├─ config/                  keyword_rules · survival_cards · fixed_audio
+   │  ├─ eval/                    14 라벨 분류 · refuse 누출 평가 · 시나리오 러너
+   │  ├─ tests/                   단위 테스트 55개
+   │  └─ docs/                    실측 기록 · 설치 절차
+   ├─ docs2/                      도메인 전환 근거 · BOM · 기능 명세
+   └─ config/ · harness/ · runner/ · results/   하네스 자리 (대부분 비어 있음)
 ```
 
 | 저장소 | 역할 |
 | ---- | ---- |
-| [OGTECH-frontend](https://github.com/2026-ESW-OGTECH/OGTECH-frontend) | 7인치 키오스크 UI, 오프라인 지도 렌더링, backend 프록시 |
-| [OGTECH-backend](https://github.com/2026-ESW-OGTECH/OGTECH-backend) | 안전 분기, 검수된 고정 카드, 지도·시간 엔진, 하드웨어 API |
-| [OGTECH-embedded](https://github.com/2026-ESW-OGTECH/OGTECH-embedded) | STM32 상시 전원 관리자 · 센서 허브 · GNSS 로거 펌웨어 |
-| [OGTECH-llm](https://github.com/2026-ESW-OGTECH/OGTECH-llm) | LLM 하네스, 14 라벨 평가, STT/LLM 기준선 측정 |
+| [OGTECH-frontend](https://github.com/2026-ESW-OGTECH/OGTECH-frontend) | 7인치 키오스크 UI(:8780), 오프라인 지도 · GPS · 일출몰 · 장치 API(:8790) |
+| [OGTECH-backend](https://github.com/2026-ESW-OGTECH/OGTECH-backend) | 안전 분기 규칙 엔진 서비스 · 검수된 고정 카드 (LLM 없음) |
+| [OGTECH-embedded](https://github.com/2026-ESW-OGTECH/OGTECH-embedded) | STM32H7A3ZI-Q 상시 계층: CO 경보 · 센서 허브 · GNSS · Jetson 전원 게이트 펌웨어 |
+| [OGTECH-llm](https://github.com/2026-ESW-OGTECH/OGTECH-llm) | 음성 파이프라인(STT→게이트→LLM 분류→TTS), 14 라벨 평가, STT/LLM 실측 |
 
 ## Video
 

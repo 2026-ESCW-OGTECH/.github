@@ -9,7 +9,7 @@ SafeAid Kit는 소프트웨어 안내 앱이 아니라, 배낭에 장착되어 �
 ## 최신 기준 요약
 
 - 메인 컴퓨팅은 `Jetson Xavier NX 8GB`를 사용하며 부팅 매체는 NVMe로 고정합니다.
-- MCU는 `STM32H7A3ZI-Q`이며 역할은 **상시 전원 관리자 + 센서 허브 + GNSS 로거**입니다.
+- MCU는 `STM32H7A3ZI-Q (Nucleo-H7A3ZI-Q)`이며 역할은 **상시 전원 관리자 + 센서 허브 + GNSS 로거**입니다.
 - 터치 화면은 `Waveshare 7inch HDMI LCD (C)`를 **HDMI + USB(터치)** 로 Jetson에 연결합니다.
   배낭 구조상 **능동형 연장 케이블**이 필요하며 실측 검증 대상입니다.
 - 측위는 `Seeed Grove GPS (Air530)`를 STM32 UART로 제어합니다 (**VCC 3.3 V**).
@@ -33,7 +33,7 @@ SafeAid Kit는 소프트웨어 안내 앱이 아니라, 배낭에 장착되어 �
                            │              │
                            ▼              ▼
       ┌────────────────────────┐   ┌──────────────────────────┐
-      │ [고측 MOSFET 로드스위치]│   │  STM32H7A3ZI-Q  상시 ON  │
+      │ [고측 MOSFET 로드스위치]│   │  STM32H7A3ZI-Q (Nucleo-H7A3ZI-Q)  상시 ON  │
       │  ← STM32가 게이팅      │   │  0.25 ~ 0.4 W            │
       │         ▼              │◀──┤   CO / 온습도 / 기압     │
       │  Jetson Xavier NX      │   │   GNSS / RTC / 자기계    │
@@ -55,13 +55,13 @@ SafeAid Kit는 소프트웨어 안내 앱이 아니라, 배낭에 장착되어 �
 | 계층 | 부품 | 비고 |
 |---|---|---|
 | 연산 | Jetson Xavier NX 8GB + NVMe | 유휴 7.3 W `[출처]` |
-| 상시 | STM32H7A3ZI-Q | 상시 전원 관리자 + 센서 허브 |
+| 상시 | STM32H7A3ZI-Q (Nucleo-H7A3ZI-Q) | 상시 전원 관리자 + 센서 허브 |
 | 표시 | Waveshare 7inch HDMI LCD (C) | **휘도 확인 필요.** 직사광선 판독에 800 nit 이상 권장 `[미검증]` |
 | 측위 | **Seeed Grove GPS (Air530)** | 6계 GNSS, u.FL 외장 안테나 동봉 |
 | 측위 | MMC5983MA + IMU | 기울기 보정 나침반. **정지 상태 방위에 필수** |
-| 시각 | DS3231 RTC | ±2 ppm. GPS OFF 상태에서 일출몰 계산 기준 |
-| 안전 | **ZE16B-CO** | **전기화학식만.** MQ 시리즈는 히터 750 mW로 금지 |
-| 환경 | SHT40 + BMP390 | 온·습도 / 기압(고도 + Zambretti) |
+| 시각 | DS3231 RTC | ±2 ppm. GPS OFF 상태에서 일출몰 계산 기준. **향후 적용 예정(현재 미연결)** |
+| 안전 | **ZE16B-CO (현재 실장)** — ZE07-CO / ZE15-CO는 향후 적용 예정(현재 미연결) | **전기화학식만.** MQ 시리즈는 히터 750 mW로 금지 |
+| 환경 | DHT11 (현재 실장) — SHT40 + BMP390은 향후 적용 예정(현재 미연결) | 온·습도 / 기압(고도 + Zambretti) |
 | 음성 | INMP441 + MAX98357A + 스피커 | 윈드스크린 필수 |
 | 알림 | IP67 부저 · 진동 · 스트로브 · **물리 버튼 3개** | 터치가 죽어도 P0 동작 |
 | 전원 | 4S5P 21700 (360 Wh) + BMS + MAX17205 | 100 Wh 미만 모듈 분리형 |

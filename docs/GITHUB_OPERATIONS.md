@@ -137,13 +137,13 @@ python -B -m unittest discover -s tests -v
 
 # backend
 python -c "import app; print('import ok')"
-python -B -m unittest discover -v
-
-# MAP: OGTECH-llm/MAP에서 실행
 python -B -m unittest discover -s tests -v
+
+# MAP: OGTECH-frontend/MAP에서 실행
+python -B -m pytest tests/ -q
 ```
 
-embedded는 Arduino CLI 또는 PlatformIO 도구체인을 확인한 뒤 빌드 결과를 기록합니다. LLM 평가는 실행 코드가 있을 때만 수행합니다.
+embedded는 STM32CubeIDE(NUCLEO-H7A3ZI-Q, `-Q` 디바이스)로 빌드한 뒤 플래시/RAM 사용량과 로그를 기록합니다. LLM 평가는 실행 코드가 있을 때만 수행합니다.
 
 이번 변경이 원인인 테스트 실패는 중단 조건입니다. 변경 전부터 존재하던 코드 결함이나 누락된 로컬 도구체인은 원인과 재현 명령을 기록하고 PR의 알려진 제한 사항으로 남길 수 있습니다. `Ran 0 tests`는 테스트 없음입니다.
 

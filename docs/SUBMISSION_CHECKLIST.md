@@ -12,7 +12,7 @@
 
 - 마감일: 2026-09-03.
 - 내부 마감일: 2026-09-01 18:00 KST.
-- 팀명: 확정 전까지 `<team-name>`.
+- 팀명: **OGTECH** (2026-08-20 확정).
 
 필수 제출물:
 
@@ -24,9 +24,9 @@
 권장 파일명:
 
 ```text
-2026ESWContest_자유공모_<team-name>_참가신청서
-2026ESWContest_자유공모_<team-name>_개발완료보고서.pdf
-2026ESWContest_자유공모_<team-name>_시연동영상
+2026ESWContest_자유공모_OGTECH_참가신청서
+2026ESWContest_자유공모_OGTECH_개발완료보고서.pdf
+2026ESWContest_자유공모_OGTECH_시연동영상
 ```
 
 ## 보고서 개요
