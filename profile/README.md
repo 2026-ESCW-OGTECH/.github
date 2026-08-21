@@ -298,11 +298,10 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 │
 ├─ OGTECH-embedded/
 │  ├─ README.md                   구현/미구현 표 · 검증 상태
-│  ├─ stm32_sentinel/
-│  │  ├─ stm32_sentinel.c         STM32H7A3ZI-Q HAL 상시 계층 펌웨어 (CO 경보 · 부저 · 전원 게이트 · JSONL 텔레메트리 · 명령)
-│  │  ├─ telemetry_protocol.c/.h  Jetson 프로토콜 v1 — JSONL+CRC16 빌더·명령 파서 (HAL 비의존)
-│  │  └─ README.md                연결 · 동작 · 설계 목표
-│  └─ tests/                      호스트(gcc) 테스트 — 펌웨어 시뮬레이션 + Jetson 파서 왕복 계약
+│  ├─ Core/
+│  │  ├─ Inc/                     모듈 인터페이스 8개
+│  │  └─ Src/                     air530_gps · dht11 · ze16b_co · co_alarm · jetson_gate · console · telemetry_protocol · sensor_app · main (CubeIDE 표준 구조)
+│  └─ tests/                      호스트(gcc) 테스트 — Core/ 전체 시뮬레이션 + Jetson 파서 왕복 계약
 │
 ├─ OGTECH-backend/
 │  ├─ app.py                      안전 분기 규칙 엔진 HTTP 서비스 (:8765, LLM 없음)
