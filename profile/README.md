@@ -283,7 +283,7 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 ## File Architecture
 
 ```
-2026ESWContest_자유공모_OGTECH_SafeAidKit_파일구조
+2026ESWContest_자유공모_OGTECH_파일구조
 .
 ├─ .github/                       조직 프로필과 공통 문서
 │  ├─ profile/
@@ -321,11 +321,11 @@ SafeAid Kit은 **묻기 전에 먼저 말해 주는** 배낭 장착형 오프라
 │  │  ├─ jetson/                  systemd 유닛 · 전원 게이팅
 │  │  ├─ TEST_images/             화면 캡처 (1024×600)
 │  │  ├─ tests/                   단위 · 회귀 테스트 80개
-│  │  └─ 시연용/                  ★ 제품 키오스크 화면 (index.html) + 촬영용 (video.html)
+│  │  └─ 시연용/                  제품 키오스크 화면 (index.html) + 촬영용 (video.html)
 │  └─ tests/
 │
 └─ OGTECH-llm/
-   ├─ Co-LLM/                     ★ 음성 파이프라인 본체
+   ├─ Co-LLM/                     음성 파이프라인 본체
    │  ├─ scripts/                 STT · 키워드 게이트 · LLM 분류 · TTS · safeaid_core(정본)
    │  ├─ config/                  keyword_rules · survival_cards · fixed_audio
    │  ├─ eval/                    14 라벨 분류 · refuse 누출 평가 · 시나리오 러너
